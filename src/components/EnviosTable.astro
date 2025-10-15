@@ -4,8 +4,15 @@
 <script>
     // @ts-nocheck
     import { fetchAPI } from "../utils/api";
+
+    function navToEdit(nro_venta) {
+        console.log(nro_venta);
+        window.location.href = `/admin/editar?nro_venta=${nro_venta}`;
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
         const tbody = document.querySelector(".tbody");
+        
 
         async function fetchEnvios() {
             try {
@@ -16,11 +23,17 @@
                 const envios = res.datos;
 
                 if(envios) {
+                    envios.sort((a, b) => {
+                        const numA = parseInt(a.nro_venta.replace("v-", ""));
+                        const numB = parseInt(b.nro_venta.replace("v-", ""));
+                        return numA - numB;
+                    });
+
                     tbody.innerHTML = envios.map(envio => `
                         <tr>
                             <td>
-                                <button id="btnEdit" class="button">Editar</button>
-                                <button id="btnUpdateState" class="button">Actualizar<br> estado</button>
+                                <button class="button btn-edit" data-nro="${envio.nro_venta}">Editar</button>
+                                <button class="button">Actualizar<br> estado</button>
                             </td>    
                             <td data-label="Nro. Venta">${envio.nro_venta}</td>    
                             <td data-label="Estado">${envio.estado}</td>    
@@ -31,6 +44,13 @@
                             <td data-label="Carnet de identidad">${envio.carnet_identidad}</td>
                         </tr>
                     `).join("")
+
+                    tbody.querySelectorAll(".btn-edit").forEach(btn => {
+                        btn.addEventListener("click", e => {
+                            const nro = e.currentTarget.dataset.nro;
+                            navToEdit(nro);
+                        });
+                    });
                 } else {
                     tbody.innerHTML = envios.map(envio => `
                         <tr>
@@ -57,7 +77,10 @@
             if(dataEnvio || dataEnvio.lenght) {
                 tbody.innerHTML = `
                     <tr>
-                        <td><button style="padding: 10px 20px; background: #007bff; font-size: 16px; border: none; cursor: pointer">Editar</button></td> 
+                        <td>
+                            <button class="button btn-edit" data-nro="${dataEnvio[0].nro_venta}">Editar</button>
+                            <button class="button">Actualizar estado</button>
+                        </td> 
                         <td data-label="Nro. venta">${dataEnvio[0].nro_venta}</td>
                         <td data-label="Estado">${dataEnvio[0].estado}</td>
                         <td data-label="HBL">${dataEnvio[0].hbl}</td>
@@ -67,6 +90,13 @@
                         <td data-label="Carnet de identidad">${dataEnvio[0].carnet_identidad}</td>    
                     </tr>
                 `
+
+                tbody.querySelectorAll(".btn-edit").forEach(btn => {
+                    btn.addEventListener("click", e => {
+                        const nro = e.currentTarget.dataset.nro;
+                        navToEdit(nro);
+                    });
+                });
             } else {
                 tbody.innerHTML = `
                     <tr>

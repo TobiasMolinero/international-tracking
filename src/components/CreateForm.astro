@@ -20,26 +20,23 @@ import Button from '../components/Button.astro'
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const nroVenta = document.querySelector('#inputNroVenta').value.trim(); 
-    const fechaVenta = document.querySelector('#inputFechaVenta').value.trim(); 
-    const fechaEnvio = document.querySelector('#inputFechaEnvio').value.trim(); 
-    const estado = document.querySelector('#selectEstado').value.trim(); 
-    const hbl = document.querySelector('#inputHbl').value.trim();
-    const contenedorGuia = document.querySelector('#inputContenedor').value.trim();
-    const nombre = document.querySelector('#inputNombre').value.trim();
-    const carnet = document.querySelector('#inputCarnet').value.trim();
+    const inputnroVenta = document.querySelector('#inputNroVenta'); 
+    const inputfechaVenta = document.querySelector('#inputFechaVenta'); 
+    const inputfechaEnvio = document.querySelector('#inputFechaEnvio'); 
+    const inputestado = document.querySelector('#selectEstado'); 
+    const inputhbl = document.querySelector('#inputHbl');
+    const inputcontenedorGuia = document.querySelector('#inputContenedor');
+    const inputnombre = document.querySelector('#inputNombre');
+    const inputcarnet = document.querySelector('#inputCarnet');
 
-    console.log({
-      nroVenta,
-      fechaVenta,
-      fechaEnvio,
-      estado,
-      hbl,
-      contenedorGuia,
-      nombre,
-      carnet
-    })
-
+    const nroVenta = inputnroVenta.value.trim()
+    const fechaVenta = inputfechaVenta.value.trim()
+    const fechaEnvio = inputfechaEnvio.value.trim()
+    const estado = inputestado.value.trim()
+    const hbl = inputhbl.value.trim()
+    const contenedorGuia = inputcontenedorGuia.value.trim()
+    const nombre = inputnombre.value.trim()
+    const carnet = inputcarnet.value.trim()
     try {
         const res = await fetchAPI("/envios", {
             method: 'POST',
@@ -58,6 +55,15 @@ import Button from '../components/Button.astro'
                 carnet_identidad: carnet
             })
         });
+        inputnroVenta.value = "";
+        inputfechaVenta.value = "";
+        inputfechaEnvio.value = "";
+        inputestado.value = "En bodega";
+        inputhbl.value = "";
+        inputcontenedorGuia.value = "";
+        inputnombre.value = "";
+        inputcarnet.value = "";
+        await alert('Envío registrado con éxito.');
     } catch (error) {
         alert('Ocurrió un error al intentar registrar el envío.');
     }

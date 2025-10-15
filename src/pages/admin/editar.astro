@@ -1,0 +1,23 @@
+---
+// import CreateForm from "../../components/CreateForm.astro";
+import Layout from "../../layouts/Layout.astro";
+import EditForm from "../../components/EditForm.astro";
+---
+
+<Layout>
+    <main class="main">
+        <a href="/admin">Volver atras</a>
+        <h2>Editar</h2>
+        <EditForm />
+    </main>
+</Layout>
+
+<style>
+    .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 20px;
+    }
+</style>
