@@ -10,6 +10,18 @@
         window.location.href = `/admin/editar?nro_venta=${nro_venta}`;
     }
 
+    async function updateStatus(nro_venta) {
+        try {
+            const res = await fetchAPI(`/envios/update-status/${nro_venta}`, {
+                method: "PATCH",
+                credentials: "include"
+            })
+            alert(res.message)
+        } catch (error) {
+            alert(error)
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
         const tbody = document.querySelector(".tbody");
         
@@ -33,9 +45,10 @@
                         <tr>
                             <td>
                                 <button class="button btn-edit" data-nro="${envio.nro_venta}">Editar</button>
-                                <button class="button">Actualizar<br> estado</button>
+                                <button class="button btn-update" data-nro="${envio.nro_venta}">Actualizar<br> estado</button>
                             </td>    
-                            <td data-label="Nro. Venta">${envio.nro_venta}</td>    
+                            <td data-label="Nro. Venta">${envio.nro_venta}</td>
+                            <td data-label="Fecha venta">${envio.fecha_venta}</td>
                             <td data-label="Estado">${envio.estado}</td>    
                             <td data-label="HBL">${envio.hbl}</td>    
                             <td data-label="Contenedor/guía">${envio.contenedor_guia}</td>    
@@ -51,6 +64,13 @@
                             navToEdit(nro);
                         });
                     });
+
+                    tbody?.querySelectorAll(".btn-update").forEach(btn => {
+                        btn.addEventListener("click", e => {
+                            const nro = e.currentTarget.dataset.nro;
+                            updateStatus(nro)
+                        })
+                    })
                 } else {
                     tbody.innerHTML = envios.map(envio => `
                         <tr>
@@ -79,9 +99,10 @@
                     <tr>
                         <td>
                             <button class="button btn-edit" data-nro="${dataEnvio[0].nro_venta}">Editar</button>
-                            <button class="button">Actualizar estado</button>
-                        </td> 
+                            <button class="button btn-update" data-nro="${dataEnvio[0].nroVenta}">Actualizar estado</button>
+                        </td>
                         <td data-label="Nro. venta">${dataEnvio[0].nro_venta}</td>
+                        <td data-label="Fecha venta">${dataEnvio[0].fecha_venta}</td>
                         <td data-label="Estado">${dataEnvio[0].estado}</td>
                         <td data-label="HBL">${dataEnvio[0].hbl}</td>
                         <td data-label="Contenedor/guía">${dataEnvio[0].contenedor_guia}</td>    
@@ -97,6 +118,13 @@
                         navToEdit(nro);
                     });
                 });
+
+                tbody?.querySelectorAll(".btn-update").forEach(btn => {
+                    btn.addEventListener("click", e => {
+                        const nro = e.currentTarget.dataset.nro;
+                        updateStatus(nro)
+                    })
+                })
             } else {
                 tbody.innerHTML = `
                     <tr>
@@ -113,6 +141,7 @@
         <tr>
             <th></th>
             <th>Nro. venta</th>
+            <th>Fecha venta</th>
             <th>Estado</th>
             <th>HBL</th>
             <th>Contenedor/guía</th>
